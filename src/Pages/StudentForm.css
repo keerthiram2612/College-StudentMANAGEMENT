@@ -1,0 +1,13 @@
+.student{
+   
+    text-align: justify;
+    align-items: center;
+    
+}
+.student-image{
+    background-image: url("https://optical.org/media/e0ad13q5/brown-wooden-book-shelf-1.png?anchor=center&mode=crop&quality=80&width=328&height=320&rnd=132563250256430000&center=0.48773063432655123,0.49396508543980205&mode=crop");
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    
+}
