@@ -18,7 +18,7 @@ export default function Navbar() {
                             <a href='Student'><li>Students</li></a>
                             <a href=''><li>Staff</li></a>
                             <a href='login'><li>Login</li></a>
-                            <a href=''><li>Logout</li></a>
+                            <a href='signup'><li>Signup</li></a>
                         </ul>
                     </div>
                 </div>
