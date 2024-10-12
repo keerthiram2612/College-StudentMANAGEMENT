@@ -1,55 +1,59 @@
-const express = require("express")
-const collection = require("./mongo")
-const cors = require("cors")
-const app = express()
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
-app.use(cors())
+const express = require("express");
+const collection = require("./mongo"); // Ensure you have a correct MongoDB collection
+const cors = require("cors");
+const app = express();
 
-app.get("/",cors(),(req,res)=>{
-   
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-app.post("/",async(req,res)=>{
-    const{email,password}=req.body
+// Route for login
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
 
-    try{
-      const check=await collection.findOne({email:email})
+  try {
+    const user = await collection.findOne({ email: email });
 
-      if(check){
-        res.json("exist")
-      }else{
-        res.json("notexist")
+    // Check if user exists and password matches
+    if (user) {
+      if (user.password === password) {
+        res.json("exist"); // User exists and password matches
+      } else {
+        res.json("wrongpassword"); // Password does not match
       }
+    } else {
+      res.json("notexist"); // User does not exist
     }
-    catch(e){
-      res.json("notexist")
-    }
-})
-app.get("/signup",cors(),(req,res)=>{
-   
-})
-app.post("/",async(req,res)=>{
-    const{email,password}=req.body
-    const data ={
-        email:email,
-        password:password
-    }
+  } catch (e) {
+    console.error(e); // Log error for debugging
+    res.status(500).json("error"); // Return error with a proper status code
+  }
+});
 
-    try{
-      const check=await collection.findOne({email:email})
+// Route for signup
+app.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
+  const data = {
+    email: email,
+    password: password, // In a real application, hash the password!
+  };
 
-      if(check){
-        res.json("exist")
-      }else{
-        res.json("notexist")
-        await collection.insertMany([data])
-      }
+  try {
+    const user = await collection.findOne({ email: email });
+
+    if (user) {
+      res.json("exist"); // User already exists
+    } else {
+      await collection.insertOne(data); // Insert a single user document
+      res.json("notexist"); // User created successfully
     }
-    catch(e){
-      res.json("notexist")
-    }
-})
-app.listen(3000,()=>{
-    console.log("port Connected")
-})
+  } catch (e) {
+    console.error(e); // Log error for debugging
+    res.status(500).json("error"); // Return error with a proper status code
+  }
+});
+
+// Start the server
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
